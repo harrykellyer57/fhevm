@@ -2,11 +2,15 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: {{ include "txSenderName" . }}
   labels:
     app: coprocessor-tx-sender
     app.kubernetes.io/name: {{ include "txSenderName" . }}
-  name: {{ include "txSenderName" . }}
 spec:
+  type: ClusterIP
+  selector:
+    app: coprocessor-tx-sender
+    app.kubernetes.io/name: {{ include "txSenderName" . }}
   ports:
     - name: metrics
       port: {{ .Values.txSender.ports.metrics }}
@@ -14,8 +18,4 @@ spec:
     - name: healthcheck
       port: {{ .Values.txSender.ports.healthcheck }}
       targetPort: healthcheck
-  selector:
-    app: coprocessor-tx-sender
-    app.kubernetes.io/name: {{ include "txSenderName" . }}
-  type: ClusterIP
 {{- end }}
